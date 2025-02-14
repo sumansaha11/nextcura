@@ -12,7 +12,7 @@ import { appointmentModel } from "../models/appointment.model.js";
 const options = {
     httpOnly: true,
     secure: true,
-    sameSite: "Strict"
+    sameSite: "None"
 };
 
 const generateAccessAndRefreshTokens = async (adminId) => {
