@@ -11,6 +11,7 @@ import { appointmentModel } from "../models/appointment.model.js";
 
 const options = {
     httpOnly: true,
+    secure: true,
     sameSite: "Strict"
 };
 
