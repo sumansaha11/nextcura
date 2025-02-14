@@ -6,7 +6,7 @@ import axiosInstance from '../utils/axiosInstance.js';
 
 const MyProfile = () => {
 
-  const { userData, setUserData } = useContext(AppContext);
+  const { userData, setUserData, getUserInfo } = useContext(AppContext);
 
   const [isEdit, setIsEdit] = useState(false);
   const [image, setImage] = useState(false);
