@@ -26,7 +26,7 @@ userRouter.route("/current-user").get(verifyJWT, getCurrentUser);
 userRouter.route("/logout").post(verifyJWT, logoutUser);
 userRouter.route("/refresh-token").post(refreshAccessToken);
 userRouter.route("/change-password").post(verifyJWT, changeCurrentPassword);
-userRouter.route("/update-profile").post(upload.single("image"), verifyJWT, updateAccountDetails);
+userRouter.route("/update-profile").patch(upload.single("image"), verifyJWT, updateAccountDetails);
 userRouter.route("/appointments").get(verifyJWT, listAppointment);
 userRouter.route("/book-appointment").post(verifyJWT, bookAppointment);
 userRouter.route("/payment-razorpay").post(verifyJWT, paymentRazorpay);

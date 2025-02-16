@@ -23,7 +23,7 @@ const MyProfile = () => {
 
       image && formData.append('image', image)
 
-      const { data } = await axiosInstance.post('/user/update-profile', formData);
+      const { data } = await axiosInstance.patch('/user/update-profile', formData);
       if (data.success) {
         toast.success("Profile Updated.");
         await getUserInfo();
