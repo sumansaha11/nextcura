@@ -237,7 +237,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
     const imageLocalPath = await req.file?.path;
 
     const user = await userModel.findByIdAndUpdate(
-        req.user?._id,
+        req.user?._id.toString(),
         {
             $set: {
                 name,
@@ -257,11 +257,11 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
             throw new ApiError(400, "Error while uploading image!");
         }
 
-        const user = await userModel.findById(req.user._id).select("image");
-        const imageToDelete = user.image.public_id;
+        const userImage = await userModel.findById(req.user._id.toString()).select("image");
+        const imageToDelete = userImage.image.public_id;
 
         const updatedUser = await userModel.findByIdAndUpdate(
-            req.user?._id,
+            req.user?._id.toString(),
             {
                 $set: {
                     image: {
@@ -374,14 +374,14 @@ const paymentRazorpay = asyncHandler(async (req, res) => {
     if (!appointmentData || appointmentData.cancelled) {
         throw new ApiError(400, "Appointment cancelled or not found!");
     }
-    
-    const options = {
-        amount: appointmentData.amount*100,
+
+    const razorpayOptions = {
+        amount: appointmentData.amount * 100,
         currency: process.env.CURRENCY,
         receipt: appointmentId
     }
 
-    const order = await razorpayInstance.orders.create(options);
+    const order = await razorpayInstance.orders.create(razorpayOptions);
 
     return res
         .status(200)
@@ -402,12 +402,14 @@ const verifyRazorpay = asyncHandler(async (req, res) => {
                     payment: true
                 }
             },
+            { new: true }
         )
+
         return res
-        .status(200)
-        .json(
-            new ApiResponse(200, orderInfo, "Payment successful.")
-        )
+            .status(200)
+            .json(
+                new ApiResponse(200, orderInfo, "Payment successful.")
+            )
     } else {
         throw new ApiError(500, "Payment failed!")
     }
@@ -418,8 +420,8 @@ const cancelAppointment = asyncHandler(async (req, res) => {
     const userId = req.user?._id.toString();
 
     const appointmentData = await appointmentModel.findById(appointmentId);
-    
-    if(appointmentData.userId !== userId) {
+
+    if (appointmentData.userId !== userId) {
         throw new ApiError(401, "Unauthorized action!")
     }
 
