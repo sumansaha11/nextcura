@@ -229,6 +229,7 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 const updateAccountDetails = asyncHandler(async (req, res) => {
 
     const { name, phone, address, dob, gender } = req.body;
+    const userId = req.user?._id.toString();
 
     if (!name || !phone || !dob || !address || !gender) {
         throw new ApiError(400, "Data is missing!")
@@ -237,7 +238,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
     const imageLocalPath = await req.file?.path;
 
     const user = await userModel.findByIdAndUpdate(
-        req.user?._id.toString(),
+        userId,
         {
             $set: {
                 name,
@@ -248,7 +249,6 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
             }
         },
         { new: true }
-
     ).select("-password -refreshToken")
 
     if (imageLocalPath) {
@@ -257,11 +257,11 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
             throw new ApiError(400, "Error while uploading image!");
         }
 
-        const userImage = await userModel.findById(req.user._id.toString()).select("image");
+        const userImage = await userModel.findById(userId).select("image");
         const imageToDelete = userImage.image.public_id;
 
         const updatedUser = await userModel.findByIdAndUpdate(
-            req.user?._id.toString(),
+            userId,
             {
                 $set: {
                     image: {
@@ -271,18 +271,11 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
                 }
             },
             { new: true }
-
         ).select("-password -refreshToken")
 
         if (imageToDelete !== "nextcura/user/inykyhi7yhs7ucxosgor" && updatedUser.image.public_id) {
             await deleteOnCloudinary(imageToDelete);
         }
-
-        return res
-            .status(200)
-            .json(
-                new ApiResponse(200, updatedUser, "Image updated.")
-            )
     }
 
     return res
