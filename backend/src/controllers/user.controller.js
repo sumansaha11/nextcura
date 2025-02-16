@@ -253,9 +253,6 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 
     if (imageLocalPath) {
         const image = await uploadOnCloudinary(imageLocalPath, "user");
-        if (!image.url) {
-            throw new ApiError(400, "Error while uploading image!");
-        }
 
         const userImage = await userModel.findById(userId).select("image");
         const imageToDelete = userImage.image.public_id;
