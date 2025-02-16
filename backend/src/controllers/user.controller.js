@@ -235,7 +235,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Data is missing!")
     }
 
-    const imageLocalPath = await req.file?.path;
+    const imageLocalPath = req.file?.path;
 
     const user = await userModel.findByIdAndUpdate(
         userId,
@@ -273,6 +273,12 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
         if (imageToDelete !== "nextcura/user/inykyhi7yhs7ucxosgor" && updatedUser.image.public_id) {
             await deleteOnCloudinary(imageToDelete);
         }
+
+        return res
+            .status(200)
+            .json(
+                new ApiResponse(200, updatedUser, "Profile image updated.")
+            )
     }
 
     return res
