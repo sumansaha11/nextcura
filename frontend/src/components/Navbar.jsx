@@ -64,7 +64,7 @@ const Navbar = () => {
                 {
                     token && userData ?
                         <div className='flex items-center gap-2 cursor-pointer relative'>
-                            <img onClick={() => setProfileMenu((prev) => !prev)} className='w-10 rounded-full' src={userData.image.url} alt="" />
+                            <img onClick={() => setProfileMenu((prev) => !prev)} className='w-10 h-10 rounded-full' src={userData.image.url} alt="" />
                             <div className={`${profileMenu ? 'w-full h-96' : 'hidden'} absolute top-0 right-32 pt-14 text-base font-medium text-gray-600 z-20 transition-all`}>
                                 <div className='min-w-44 bg bg-stone-100 rounded flex flex-col gap-4 p-4'>
                                     <p onClick={() => {navigate('my-profile'), setProfileMenu(false)}} className='hover:text-black cursor-pointer'>My Profile</p>

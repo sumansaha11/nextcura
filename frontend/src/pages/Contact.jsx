@@ -17,7 +17,7 @@ const Contact = () => {
           <div>
             <p className='font-semibold text-lg text-gray-700 py-1'>Our OFFICE</p>
             <p className='text-gray-600 py-1'>54709 Williams Station <br /> Suite 350, Washington, USA</p>
-            <p className='text-gray-600 py-1'>Tel: (415) 555-0132 <br /> Email: sumansaha1108@gmail.com</p>
+            <p className='text-gray-600 py-1'>Tel: +91 9330674624 <br /> Email: sumansaha1108@gmail.com</p>
           </div>
           <div>
             <p className='font-semibold text-lg text-gray-700 py-1'>Careers at NEXTCURA</p>

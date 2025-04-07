@@ -25,7 +25,7 @@ const MyProfile = () => {
 
       const { data } = await axiosInstance.patch('/user/update-profile', formData);
       if (data.success) {
-        toast.success("Profile Updated.");
+        toast.success(data.message);
         await getUserInfo();
         setIsEdit(false);
         setImage(false);

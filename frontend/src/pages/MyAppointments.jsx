@@ -7,9 +7,10 @@ import axiosInstance from '../utils/axiosInstance.js';
 const MyAppointments = () => {
   const navigate = useNavigate();
 
-  const { token, getDoctorsData } = useContext(AppContext);
+  const { token } = useContext(AppContext);
 
   const [appointments, setAppointments] = useState([]);
+  const [filterOption, setFilterOption] = useState("All");
 
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
   const slotDateFormat = (slotDate) => {
@@ -22,6 +23,7 @@ const MyAppointments = () => {
       const { data } = await axiosInstance.get('/user/appointments');
       if (data.success) {
         setAppointments(data.data.reverse());
+        return data.data;
       }
     } catch (error) {
       console.log(error);
@@ -72,8 +74,8 @@ const MyAppointments = () => {
     try {
       const { data } = await axiosInstance.post('/user/cancel-appointment', { appointmentId });
       if (data.success) {
-        toast.success(data.message);
         getUserAppointments();
+        toast.success(data.message);
       }
     } catch (error) {
       console.log(error);
@@ -84,13 +86,40 @@ const MyAppointments = () => {
   useEffect(() => {
     if (token) {
       getUserAppointments()
-      getDoctorsData()
+        .then((data) => {
+          if (filterOption === "All") {
+            setAppointments(data)
+          }
+          else if (filterOption === "Pending") {
+            setAppointments(data.filter(appointments =>
+              appointments.cancelled === false && appointments.isCompleted === false
+            ))
+          }
+          else if (filterOption === "Completed") {
+            setAppointments(data.filter(appointments => appointments.isCompleted === true))
+          }
+          else if (filterOption === "Cancelled") {
+            setAppointments(data.filter(appointments => appointments.cancelled === true))
+          }
+        })
+        .catch(e => console.log(e))
     }
-  }, [token])
+  }, [token, filterOption])
 
   return (
     <div>
-      <p className='pb-3 mt-12 font-medium text-zinc-800 border-b'>My appointments</p>
+      <div className='flex justify-between border-b'>
+        <p className='pb-3 mt-12 font-medium text-zinc-800'>My appointments</p>
+        <div className='flex items-center rounded mx-3'>
+          <select className='bg-gray-100 rounded cursor-pointer' onChange={(e) => setFilterOption(e.target.value)} value={filterOption}>
+            <option value="All">All</option>
+            <option value="Pending">Pending</option>
+            <option value="Completed">Completed</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+          <div className='mx-1 font-medium'>Filter</div>
+        </div>
+      </div>
       <div>
         {appointments.map((item, index) => (
           <div className='grid grid-cols-[1fr_2fr] gap-4 sm:flex sm:gap-6 py-2 border-b' key={index}>
