@@ -1,1 +1,1 @@
-NextCura Panel: https://nextcura-panel.vercel.app/admin/login
+NextCura Panel: https://nextcura-panel.vercel.app/doctor/login
